@@ -29,7 +29,7 @@ function updateCanvasSize(windowWidth, windowHeight) {
   centerX = windowWidth * 0.5;
   centerY = windowHeight * 0.5;
   blockWidth = map(windowWidth, 200, 1024, 20, 40)
-  blockHeight = map(windowWidth, 200, 1024, 20, 20)
+  blockHeight = map(windowWidth, 200, 1024, 10, 20)
 }
 
 function draw() {
