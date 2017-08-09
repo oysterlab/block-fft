@@ -1,12 +1,36 @@
 let centerX, centerY, blockWidth, blockHeight;
 
 let soundFile, fft, filter;
+
+const options = {
+  blockRowCount: 16,
+  blockWidth: 40,
+  blockHeight: 20,
+  baseBlockHeight: 20,
+  amp: 0.3
+}
+
+function controller() {
+  const gui = new dat.GUI();
+  gui.add(options, 'blockRowCount');
+  gui.add(options, 'blockWidth');
+  gui.add(options, 'blockHeight');
+  gui.add(options, 'baseBlockHeight'); 
+  const control = gui.add(options, 'amp');
+  dat.gui.GUI.toggleHide();
+
+  window.addEventListener('keydown', (e) => {
+    if(e.key == 'c') dat.gui.GUI.toggleHide();
+  })
+}
+
 function preload() {
   soundFormats('mp3', 'ogg');
   soundFile = loadSound('sample/sample')
 }
 
 function setup() {
+  controller();
   createCanvas(windowWidth, windowHeight);
   soundFile.loop();
 
@@ -25,22 +49,22 @@ function windowResized() {
 }
 
 function updateCanvasSize(windowWidth, windowHeight) {
-
   centerX = windowWidth * 0.5;
   centerY = windowHeight * 0.5;
-  blockWidth = map(windowWidth, 200, 1024, 20, 40)
-  blockHeight = map(windowWidth, 200, 1024, 10, 20)
+  // blockWidth = map(windowWidth, 200, 1024, options.blockWidth * 0.5, options.blockWidth)
+  // blockHeight = map(windowWidth, 200, 1024, options.blockHeight * 0.5, options.blockHeight)
 }
 
 function draw() {
   background(255);
+  const { blockRowCount, blockWidth, blockHeight, baseBlockHeight, amp } = options;
 
   const spectrum = fft.analyze();
 
   const width = blockWidth;
   const height = blockHeight;
 
-  const size = 16
+  const size = blockRowCount
   translate(centerX, centerY);
   for(let y = 0; y < size; y++) {
     const rc = (y < size * 0.5) ? y + 1 : size - y - 1;
@@ -51,7 +75,7 @@ function draw() {
 
       const xi = x - rc * 0.5;
       translate(width * xi, height * 0.5 * yi);
-      let h = -height + spectrum[(x + y * size)] * 0.2
+      let h = -baseBlockHeight + spectrum[(x + y * size)] * amp
       let z = 0;
 
       //top

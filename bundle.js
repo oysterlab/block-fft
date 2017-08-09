@@ -9,12 +9,36 @@ var centerX = void 0,
 var soundFile = void 0,
     fft = void 0,
     filter = void 0;
+
+var options = {
+  blockRowCount: 16,
+  blockWidth: 40,
+  blockHeight: 20,
+  baseBlockHeight: 20,
+  amp: 0.3
+};
+
+function controller() {
+  var gui = new dat.GUI();
+  gui.add(options, 'blockRowCount');
+  gui.add(options, 'blockWidth');
+  gui.add(options, 'blockHeight');
+  gui.add(options, 'baseBlockHeight');
+  var control = gui.add(options, 'amp');
+  dat.gui.GUI.toggleHide();
+
+  window.addEventListener('keydown', function (e) {
+    if (e.key == 'c') dat.gui.GUI.toggleHide();
+  });
+}
+
 function preload() {
   soundFormats('mp3', 'ogg');
   soundFile = loadSound('sample/sample');
 }
 
 function setup() {
+  controller();
   createCanvas(windowWidth, windowHeight);
   soundFile.loop();
 
@@ -33,22 +57,27 @@ function windowResized() {
 }
 
 function updateCanvasSize(windowWidth, windowHeight) {
-
   centerX = windowWidth * 0.5;
   centerY = windowHeight * 0.5;
-  blockWidth = map(windowWidth, 200, 1024, 20, 40);
-  blockHeight = map(windowWidth, 200, 1024, 10, 20);
+  // blockWidth = map(windowWidth, 200, 1024, options.blockWidth * 0.5, options.blockWidth)
+  // blockHeight = map(windowWidth, 200, 1024, options.blockHeight * 0.5, options.blockHeight)
 }
 
 function draw() {
   background(255);
+  var blockRowCount = options.blockRowCount,
+      blockWidth = options.blockWidth,
+      blockHeight = options.blockHeight,
+      baseBlockHeight = options.baseBlockHeight,
+      amp = options.amp;
+
 
   var spectrum = fft.analyze();
 
   var width = blockWidth;
   var height = blockHeight;
 
-  var size = 16;
+  var size = blockRowCount;
   translate(centerX, centerY);
   for (var y = 0; y < size; y++) {
     var rc = y < size * 0.5 ? y + 1 : size - y - 1;
@@ -59,7 +88,7 @@ function draw() {
 
       var xi = x - rc * 0.5;
       translate(width * xi, height * 0.5 * yi);
-      var h = -height + spectrum[x + y * size] * 0.2;
+      var h = -baseBlockHeight + spectrum[x + y * size] * amp;
       var z = 0;
 
       //top
