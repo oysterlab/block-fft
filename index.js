@@ -51,7 +51,7 @@ function draw() {
 
       const xi = x - rc * 0.5;
       translate(width * xi, height * 0.5 * yi);
-      let h = spectrum[(x + y * size)] * 0.2
+      let h = -height + spectrum[(x + y * size)] * 0.2
       let z = 0;
 
       //top
@@ -64,7 +64,7 @@ function draw() {
       endShape(CLOSE);
 
       //left
-      fill(240);
+      fill(245);
       beginShape();
       vertex(-width / 2, height / 2 - h);
       vertex(0, height - h);
@@ -73,7 +73,7 @@ function draw() {
       endShape(CLOSE);
 
       //right
-      fill(220);
+      fill(235);
       beginShape();
       vertex(width / 2, height / 2 - h);
       vertex(0, height - h);

@@ -37,7 +37,7 @@ function updateCanvasSize(windowWidth, windowHeight) {
   centerX = windowWidth * 0.5;
   centerY = windowHeight * 0.5;
   blockWidth = map(windowWidth, 200, 1024, 20, 40);
-  blockHeight = map(windowWidth, 200, 1024, 20, 20);
+  blockHeight = map(windowWidth, 200, 1024, 10, 20);
 }
 
 function draw() {
@@ -59,7 +59,7 @@ function draw() {
 
       var xi = x - rc * 0.5;
       translate(width * xi, height * 0.5 * yi);
-      var h = spectrum[x + y * size] * 0.2;
+      var h = -height + spectrum[x + y * size] * 0.2;
       var z = 0;
 
       //top
@@ -72,7 +72,7 @@ function draw() {
       endShape(CLOSE);
 
       //left
-      fill(240);
+      fill(245);
       beginShape();
       vertex(-width / 2, height / 2 - h);
       vertex(0, height - h);
@@ -81,7 +81,7 @@ function draw() {
       endShape(CLOSE);
 
       //right
-      fill(220);
+      fill(235);
       beginShape();
       vertex(width / 2, height / 2 - h);
       vertex(0, height - h);
